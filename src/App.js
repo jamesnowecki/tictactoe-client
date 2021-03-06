@@ -7,14 +7,15 @@ import InputField from './components/InputField'
 const client = new W3CWebSocket('ws://127.0.0.1:1984')
 
 const App = () => {
-
+  const [clientName, updateClientName] = useState('Your name');
   const [clientId, updateClientId] = useState('');
   const [gameId, updateGameId] = useState('Enter Game ID here or create a game');
+  const [gameState, updateGameState] = useState({});
   const [boardState, updateBoardState] = useState({});
 
   const executeMethod = (dataObj) => {
     console.log('executeMethodCalled with data', dataObj)
-    const { method, clientId, gameId } = dataObj;
+    const { method, clientId, gameState } = dataObj;
     console.log(method)
     console.log(clientId)
 
@@ -26,7 +27,8 @@ const App = () => {
       case 'create':
         console.log('create method recieved')
         console.log('data:', dataObj)
-        checkGameId(gameId)
+        checkGameId(gameState.gameId);
+        updateGameState(gameState);
         break;
       case 'join':
         console.log('join method received')
@@ -55,7 +57,8 @@ const App = () => {
   const createGame = () => {
     client.send(JSON.stringify({
       method: 'create',
-      clientId: clientId
+      clientId: clientId,
+      clientName: clientName
     }));
   };
 
@@ -63,7 +66,7 @@ const App = () => {
     client.send(JSON.stringify({
       method: 'join',
       clientId: clientId,
-      gameId: gameId,
+      gameState: gameState
     }));
   };
 
@@ -101,14 +104,14 @@ const App = () => {
 
   return (
     <div className={styles.App}>
-      <p>Tic tac toe</p>
+      <p>Tic tac toe - James Nowecki</p>
       <div className={styles.gameIdInput}>
+        <InputField value={clientName} handleInput={(e) => updateClientName}/>
         <InputField  value={gameId} handleInput={(e) => updateGameId(e)}/>
       </div>
       <button onClick={() => createGame()}>create</button>
       <button onClick={() => joinServer()}>join</button>
       <button onClick={() => sendCurrentPlay()}>play</button>
-
     </div>
   );
 }
