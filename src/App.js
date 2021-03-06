@@ -113,6 +113,55 @@ const App = () => {
     }
   }
 
+  const mockBoard = {
+    A1: {
+      id: 'A1',
+      isOccupied: true,
+      color: 'blue'
+    },
+    A2: {
+      id: 'A2',
+      isOccupied: true,
+      color: 'blue'
+    },
+    A3: {
+      id: 'A3',
+      isOccupied: false,
+      color: 'white'
+    },
+    B1: {
+      id: 'B1',
+      isOccupied: false,
+      color: 'white'
+    },
+    B2: {
+      id: 'B2',
+      isOccupied: true,
+      color: 'red'
+    },
+    B3: {
+      id: 'B3',
+      isOccupied: true,
+      color: 'red'
+    },
+    C1: {
+      id: 'C1',
+      isOccupied: true,
+      color: 'blue'
+
+    },
+    C2: {
+      id: 'C2',
+      isOccupied: false,
+      color: 'white',
+    },
+    C3: {
+      id: 'C3',
+      isOccupied: true,
+      color: 'red'
+    }
+  }
+
   return (
     <div className={styles.App}>
       <p>Tic tac toe - James Nowecki</p>
@@ -125,7 +174,7 @@ const App = () => {
       <button onClick={() => sendCurrentPlay()}>play</button>
       {generatePlayerWidgetJSX(gameState)}
       <div>
-        <Board gameState={gameState} />
+        <Board gameState={mockBoard} />
       </div>
     </div>
   );
