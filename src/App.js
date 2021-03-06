@@ -42,6 +42,24 @@ const App = () => {
     };
   };
 
+  const createGame = () => {
+    client.send(JSON.stringify({
+      method: 'create'
+    }));
+  };
+
+  const joinServer = () => {
+    client.send(JSON.stringify({
+      method: 'join'
+    }));
+  };
+
+  const sendCurrentPlay = () => {
+    client.send(JSON.stringify({
+      method: 'play',
+    }));
+  };
+
   useEffect(() => {
 
     const establishSocketConnection = () => {
@@ -65,12 +83,15 @@ const App = () => {
 
     establishSocketConnection();
     
-
   })
 
   return (
     <div className={styles.App}>
       <p>Tic tac toe</p>
+      <button onClick={() => createGame()}>create</button>
+      <button onClick={() => joinServer()}>join</button>
+      <button onClick={() => sendCurrentPlay()}>play</button>
+
     </div>
   );
 }
