@@ -11,9 +11,15 @@ const App = () => {
   const [boardState, updateBoardState] = useState({});
 
   const executeMethod = (dataObj) => {
-    const { method } = dataObj.method;
+    console.log('executeMethodCalled with data', dataObj)
+    const { method, clientId } = dataObj;
+    console.log(method)
+    console.log(clientId)
 
     switch (method) {
+      case 'connect':
+        console.log("connect method received")
+        checkClientId(clientId)
       case 'create':
         console.log('create method recieved')
         console.log('data:'. dataObj)
@@ -44,19 +50,23 @@ const App = () => {
 
   const createGame = () => {
     client.send(JSON.stringify({
-      method: 'create'
+      method: 'create',
+      clientId: clientId
     }));
   };
 
   const joinServer = () => {
     client.send(JSON.stringify({
-      method: 'join'
+      method: 'join',
+      clientId
     }));
   };
 
   const sendCurrentPlay = () => {
+    console.log(clientId)
     client.send(JSON.stringify({
       method: 'play',
+      clientId
     }));
   };
 
@@ -75,9 +85,8 @@ const App = () => {
         console.log(message);
 
         const data = JSON.parse(message.data)
-        
+        console.log(data)
         executeMethod(data)
-        
       }
     };
 
