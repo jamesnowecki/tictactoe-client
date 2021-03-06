@@ -2,35 +2,39 @@ import styles from './App.module.scss';
 import React, { useState, useEffect } from 'react';
 import {w3cwebsocket as W3CWebSocket } from 'websocket';
 
+import InputField from './components/InputField'
+
 const client = new W3CWebSocket('ws://127.0.0.1:1984')
 
 const App = () => {
 
   const [clientId, updateClientId] = useState('');
-  const [gameId, updateGameId] = useState('');
+  const [gameId, updateGameId] = useState('Enter Game ID here or create a game');
   const [boardState, updateBoardState] = useState({});
 
   const executeMethod = (dataObj) => {
     console.log('executeMethodCalled with data', dataObj)
-    const { method, clientId } = dataObj;
+    const { method, clientId, gameId } = dataObj;
     console.log(method)
     console.log(clientId)
 
     switch (method) {
       case 'connect':
         console.log("connect method received")
-        checkClientId(clientId)
+        checkClientId(clientId);
+        break;
       case 'create':
         console.log('create method recieved')
-        console.log('data:'. dataObj)
+        console.log('data:', dataObj)
+        checkGameId(gameId)
         break;
       case 'join':
         console.log('join method received')
-        console.log('data:'. dataObj)
+        console.log('data:', dataObj)
         break;
       case 'update':
         console.log('update method received')
-        console.log('data:, dataObj')
+        console.log('data:', dataObj)
     }
   }
 
@@ -58,7 +62,8 @@ const App = () => {
   const joinServer = () => {
     client.send(JSON.stringify({
       method: 'join',
-      clientId
+      clientId: clientId,
+      gameId: gameId,
     }));
   };
 
@@ -97,6 +102,9 @@ const App = () => {
   return (
     <div className={styles.App}>
       <p>Tic tac toe</p>
+      <div className={styles.gameIdInput}>
+        <InputField  value={gameId} handleInput={(e) => updateGameId(e)}/>
+      </div>
       <button onClick={() => createGame()}>create</button>
       <button onClick={() => joinServer()}>join</button>
       <button onClick={() => sendCurrentPlay()}>play</button>
