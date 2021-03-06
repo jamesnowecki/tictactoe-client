@@ -9,9 +9,9 @@ import Board from './components/Board';
 const client = new W3CWebSocket('ws://127.0.0.1:1984')
 
 const App = () => {
-  const [clientName, updateClientName] = useState('Your name');
+  const [clientName, updateClientName] = useState('');
   const [clientId, updateClientId] = useState('');
-  const [gameId, updateGameId] = useState('Enter Game ID here or create a game');
+  const [gameId, updateGameId] = useState('');
   const [gameState, updateGameState] = useState({});
   const [boardState, updateBoardState] = useState({});
 
@@ -81,6 +81,10 @@ const App = () => {
     }));
   };
 
+  const handlePlay = (e) => {
+    console.log(e)
+  }
+
   useEffect(() => {
 
     const establishSocketConnection = () => {
@@ -112,6 +116,8 @@ const App = () => {
       </div>
     }
   }
+
+  
 
   const mockBoard = {
     A1: {
@@ -166,15 +172,19 @@ const App = () => {
     <div className={styles.App}>
       <p>Tic tac toe - James Nowecki</p>
       <div className={styles.gameIdInput}>
+        <p>Name:</p>
         <InputField value={clientName} handleInput={(e) => updateClientName(e)}/>
+        <button onClick={() => createGame()}>create</button>
+
+        <p>Game ID: Click create to generate, or enter an ID and click join</p>
         <InputField  value={gameId} handleInput={(e) => updateGameId(e)}/>
+        <button onClick={() => joinServer()}>join</button>
+
       </div>
-      <button onClick={() => createGame()}>create</button>
-      <button onClick={() => joinServer()}>join</button>
       <button onClick={() => sendCurrentPlay()}>play</button>
       {generatePlayerWidgetJSX(gameState)}
       <div>
-        <Board gameState={mockBoard} />
+        <Board gameState={mockBoard} squareHandleClick={handlePlay}/>
       </div>
     </div>
   );
