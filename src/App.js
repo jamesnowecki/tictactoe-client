@@ -4,6 +4,7 @@ import {w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import InputField from './components/InputField';
 import PlayerWidget from './components/PlayerWidget';
+import Board from './components/Board';
 
 const client = new W3CWebSocket('ws://127.0.0.1:1984')
 
@@ -123,6 +124,9 @@ const App = () => {
       <button onClick={() => joinServer()}>join</button>
       <button onClick={() => sendCurrentPlay()}>play</button>
       {generatePlayerWidgetJSX(gameState)}
+      <div>
+        <Board gameState={gameState} />
+      </div>
     </div>
   );
 }
