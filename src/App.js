@@ -13,7 +13,7 @@ const App = () => {
   const [clientId, updateClientId] = useState('');
   const [gameId, updateGameId] = useState('');
   const [gameState, updateGameState] = useState({});
-  const [boardState, updateBoardState] = useState({});
+  const [activePlayerId, updateActivePlayerId] = useState('')
 
   const executeMethod = (dataObj) => {
     console.log('executeMethodCalled with data', dataObj)
@@ -86,8 +86,8 @@ const App = () => {
 
   const handlePlay = (e) => {
     if (!e.isOccupied
-      // && gameState.isActive
-      // && clientId === activePlayId
+      && gameState.gameIsActive
+      && clientId === activePlayerId
     ) {
       sendCurrentPlay(e)
     }
@@ -109,6 +109,10 @@ const App = () => {
 
         const data = JSON.parse(message.data)
         console.log(data)
+        if (data.gameState && data.gameState.activePlayerId) {
+          updateActivePlayerId(data.gameState.activePlayerId)
+        }
+
         executeMethod(data)
       }
     };
@@ -122,6 +126,19 @@ const App = () => {
       return <div>
         <PlayerWidget clientArray={gameState.clients}/>
       </div>
+    }
+  }
+
+  const generateBoardJSX = (gameState) => {
+    if(gameState && gameState.gameIsActive) {
+      return (
+        <div>
+          <h3>
+            {clientId === activePlayerId ? <h3>Your move</h3> : <h3>Opponent's move</h3>}
+          </h3>
+          <Board gameState={mockBoard} squareHandleClick={handlePlay}/>
+       </div>
+       )
     }
   }
 
@@ -191,7 +208,7 @@ const App = () => {
       <button onClick={() => sendCurrentPlay()}>play</button>
       {generatePlayerWidgetJSX(gameState)}
       <div>
-        <Board gameState={mockBoard} squareHandleClick={handlePlay}/>
+        {generateBoardJSX(gameState)}
       </div>
     </div>
   );
