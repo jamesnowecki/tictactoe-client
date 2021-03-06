@@ -73,16 +73,24 @@ const App = () => {
     }));
   };
 
-  const sendCurrentPlay = () => {
-    console.log(clientId)
+  const sendCurrentPlay = (e) => {
+    console.log("e on exit: ", e)
     client.send(JSON.stringify({
       method: 'play',
-      clientId
+      clientId: clientId,
+      move: {
+        moveSquareId: e.id
+      }
     }));
   };
 
   const handlePlay = (e) => {
-    console.log(e)
+    if (!e.isOccupied
+      // && gameState.isActive
+      // && clientId === activePlayId
+    ) {
+      sendCurrentPlay(e)
+    }
   }
 
   useEffect(() => {
@@ -117,7 +125,6 @@ const App = () => {
     }
   }
 
-  
 
   const mockBoard = {
     A1: {
