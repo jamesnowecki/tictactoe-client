@@ -7,7 +7,7 @@ const Square = (props) => {
   const { isOccupied, color, id } = square;
 
   const inlineStyle = {
-      'background-color': color
+      'backgroundColor': color
   }
   return (
     <div 

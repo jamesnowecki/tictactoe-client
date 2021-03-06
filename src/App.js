@@ -131,64 +131,16 @@ const App = () => {
 
   const generateBoardJSX = (gameState) => {
     if(gameState && gameState.gameIsActive) {
+      console.log("gameState:", gameState)
+      const { boardState } = gameState;
       return (
         <div>
           <h3>
-            {clientId === activePlayerId ? <h3>Your move</h3> : <h3>Opponent's move</h3>}
+            {clientId === activePlayerId ? `Your move` : `Opponent's move`}
           </h3>
-          <Board gameState={mockBoard} squareHandleClick={handlePlay}/>
+          <Board gameState={boardState} squareHandleClick={handlePlay}/>
        </div>
        )
-    }
-  }
-
-
-  const mockBoard = {
-    A1: {
-      id: 'A1',
-      isOccupied: true,
-      color: 'blue'
-    },
-    A2: {
-      id: 'A2',
-      isOccupied: true,
-      color: 'blue'
-    },
-    A3: {
-      id: 'A3',
-      isOccupied: false,
-      color: 'white'
-    },
-    B1: {
-      id: 'B1',
-      isOccupied: false,
-      color: 'white'
-    },
-    B2: {
-      id: 'B2',
-      isOccupied: true,
-      color: 'red'
-    },
-    B3: {
-      id: 'B3',
-      isOccupied: true,
-      color: 'red'
-    },
-    C1: {
-      id: 'C1',
-      isOccupied: true,
-      color: 'blue'
-
-    },
-    C2: {
-      id: 'C2',
-      isOccupied: false,
-      color: 'white',
-    },
-    C3: {
-      id: 'C3',
-      isOccupied: true,
-      color: 'red'
     }
   }
 
