@@ -40,6 +40,7 @@ const App = () => {
       case 'update':
         console.log('update method received')
         console.log('data:', dataObj)
+        updateGameState(gameState);
     }
   }
 
@@ -91,11 +92,10 @@ const App = () => {
       && clientId === activePlayerId
     ) {
       sendCurrentPlay(e)
-    }
-  }
+    };
+  };
 
   useEffect(() => {
-
     const establishSocketConnection = () => {
       client.onopen = () => {
         console.log('websocket open');
@@ -119,8 +119,7 @@ const App = () => {
     };
 
     establishSocketConnection();
-    
-  })
+  });
 
   const generatePlayerWidgetJSX = (gameState) => {
     if (gameState.clients && gameState.clients.length > 0)  {
@@ -128,7 +127,7 @@ const App = () => {
         <PlayerWidget clientArray={gameState.clients}/>
       </div>
     }
-  }
+  };
 
   const generateBoardJSX = (gameState) => {
     if(gameState && gameState.gameIsActive) {
