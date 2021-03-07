@@ -78,6 +78,7 @@ const App = () => {
     client.send(JSON.stringify({
       method: 'play',
       clientId: clientId,
+      gameId: gameId,
       move: {
         moveSquareId: e.id
       }
