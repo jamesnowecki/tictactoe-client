@@ -4,53 +4,46 @@ import {w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import InputField from './components/InputField';
 import PlayerWidget from './components/PlayerWidget';
+import Board from './components/Board';
 
 const client = new W3CWebSocket('ws://127.0.0.1:1984')
 
 const App = () => {
-  const [clientName, updateClientName] = useState('Your name');
+  const [clientName, updateClientName] = useState('');
   const [clientId, updateClientId] = useState('');
-  const [gameId, updateGameId] = useState('Enter Game ID here or create a game');
+  const [gameId, updateGameId] = useState('');
   const [gameState, updateGameState] = useState({});
-  const [boardState, updateBoardState] = useState({});
+  const [activePlayerId, updateActivePlayerId] = useState('');
 
   const executeMethod = (dataObj) => {
-    console.log('executeMethodCalled with data', dataObj)
     const { method, clientId, gameState } = dataObj;
-    console.log(method)
-    console.log(clientId)
 
     switch (method) {
       case 'connect':
-        console.log("connect method received")
         checkClientId(clientId);
         break;
       case 'create':
-        console.log('create method recieved')
-        console.log('data:', dataObj)
         checkGameId(gameState.gameId);
         updateGameState(gameState);
         break;
       case 'join':
-        console.log('join method received')
-        console.log('data:', dataObj)
         updateGameState(gameState);
         break;
       case 'update':
-        console.log('update method received')
-        console.log('data:', dataObj)
-    }
-  }
+        updateGameState(gameState);
+        break;
+      default:
+        updateGameState(gameState)
+    };
+  };
 
   const checkClientId = (id) => {
-    console.log("checkId called with", id);
     if (id !== clientId) {
       updateClientId(id);
     };
   };
 
   const checkGameId = (id) => {
-    console.log("checkGameId called with", id);
     if (id !== gameId) {
       updateGameId(id);
     };
@@ -72,37 +65,49 @@ const App = () => {
     }));
   };
 
-  const sendCurrentPlay = () => {
-    console.log(clientId)
+  const sendCurrentPlay = (e) => {
     client.send(JSON.stringify({
       method: 'play',
-      clientId
+      clientId: clientId,
+      gameId: gameId,
+      move: {
+        moveSquareId: e.id
+      }
     }));
   };
 
-  useEffect(() => {
+  const handlePlay = (e) => {
+    if (!e.isOccupied
+      && gameState.gameIsActive
+      && clientId === activePlayerId
+    ) {
+      sendCurrentPlay(e)
+    };
+  };
 
+  useEffect(() => {
     const establishSocketConnection = () => {
       client.onopen = () => {
-        console.log('websocket open');
+        console.info('websocket open');
       }
 
       client.onclose = () => {
-        console.log('websocket closed')
+        console.info('websocket closed')
       }
 
       client.onmessage = (message) => {
-        console.log(message);
-
         const data = JSON.parse(message.data)
-        console.log(data)
+        console.info(data)
+        if (data.gameState && data.gameState.activePlayerId) {
+          updateActivePlayerId(data.gameState.activePlayerId)
+        }
+
         executeMethod(data)
       }
     };
 
     establishSocketConnection();
-    
-  })
+  });
 
   const generatePlayerWidgetJSX = (gameState) => {
     if (gameState.clients && gameState.clients.length > 0)  {
@@ -110,19 +115,52 @@ const App = () => {
         <PlayerWidget clientArray={gameState.clients}/>
       </div>
     }
+  };
+
+  const generateBoardJSX = (gameState) => {
+    //JPN - Show game only when active, or display final boardstate
+    if((gameState && gameState.gameIsActive) || (gameState && gameState.gameResult)) {
+      const { boardState } = gameState;
+      return (
+        <div >
+          <h3 className={styles.turnTracker}>
+            {clientId === activePlayerId ? `Your move` : `Opponent's move`}
+          </h3>
+          <Board gameState={boardState} squareHandleClick={handlePlay}/>
+       </div>
+       )
+    }
   }
+
+  const generateVictoryNotifier = (gameState) => {
+    if (gameState && !gameState.gameIsActive && gameState.gameResult) {
+      const { gameResult } = gameState;
+    return gameResult.victoryAchieved ? (<h3>{gameResult.winningColor} wins!</h3>) : (<h3>Game resulted in a draw</h3>);
+    };
+  };
 
   return (
     <div className={styles.App}>
-      <p>Tic tac toe - James Nowecki</p>
+      <h1>Tic tac toe - James Nowecki</h1>
       <div className={styles.gameIdInput}>
-        <InputField value={clientName} handleInput={(e) => updateClientName(e)}/>
-        <InputField  value={gameId} handleInput={(e) => updateGameId(e)}/>
+        <div className={styles.inputSection}>
+          <p>Name:</p>
+          <InputField value={clientName} handleInput={(e) => updateClientName(e)}/>
+          {!gameState.gameIsActive ? (<button onClick={() => createGame()}>Create</button>) : null}
+        </div>
+        <div className={styles.inputSection}>
+          <p>Game ID: Click create to generate, or enter an ID and click join</p>
+          <InputField  value={gameId} handleInput={(e) => updateGameId(e)}/>
+          {!gameState.gameIsActive? (<button onClick={() => joinServer()}>Join</button>) : null}
+        </div>
       </div>
-      <button onClick={() => createGame()}>create</button>
-      <button onClick={() => joinServer()}>join</button>
-      <button onClick={() => sendCurrentPlay()}>play</button>
-      {generatePlayerWidgetJSX(gameState)}
+      <div className={styles.playerBox}>
+        {generatePlayerWidgetJSX(gameState)}
+        {generateVictoryNotifier(gameState)}
+      </div>
+      <div>
+        {generateBoardJSX(gameState)}
+      </div>
     </div>
   );
 }
