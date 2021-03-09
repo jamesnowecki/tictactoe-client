@@ -1,12 +1,11 @@
 import styles from './App.module.scss';
 import React, { useState, useEffect } from 'react';
-import {w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import InputField from './components/InputField';
 import PlayerWidget from './components/PlayerWidget';
 import Board from './components/Board';
 
-const client = new W3CWebSocket('ws://127.0.0.1:1984')
+const client = new WebSocket('ws://127.0.0.1:1984');
 
 const App = () => {
   const [clientName, updateClientName] = useState('');
