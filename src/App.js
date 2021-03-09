@@ -32,6 +32,9 @@ const App = () => {
       case 'update':
         updateGameState(gameState);
         break;
+      case 'reset':
+        updateGameState(gameState);
+        break;
       default:
         updateGameState(gameState)
     };
@@ -85,6 +88,13 @@ const App = () => {
     };
   };
 
+  const resetGame = () => {
+    client.send(JSON.stringify({
+      method: 'reset',
+      gameId: gameId
+    }));
+  };
+
   useEffect(() => {
     const establishSocketConnection = () => {
       client.onopen = () => {
@@ -128,14 +138,22 @@ const App = () => {
           </h3>
           <Board gameState={boardState} squareHandleClick={handlePlay}/>
        </div>
-       )
+      )
     }
   }
 
   const generateVictoryNotifier = (gameState) => {
     if (gameState && !gameState.gameIsActive && gameState.gameResult) {
       const { gameResult } = gameState;
-    return gameResult.victoryAchieved ? (<h3>{gameResult.winningColor} wins!</h3>) : (<h3>Game resulted in a draw</h3>);
+
+      const resultJSX = gameResult.victoryAchieved ? (<h3>{gameResult.winningColor} wins!</h3>) : (<h3>Game resulted in a draw</h3>);
+
+      return  (
+        <div>
+          {resultJSX}
+          <button onClick={() => resetGame()}>Reset board</button>
+        </div>
+      );
     };
   };
 
