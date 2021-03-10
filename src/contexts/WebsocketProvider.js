@@ -4,7 +4,6 @@ const WebsocketContext = React.createContext()
 
 const client = new WebSocket('ws://127.0.0.1:1984');
 
-//JPN - Maybe this would be better called 'useGameLogic' or similar?
 export const useTictactoe = () => {
     return useContext(WebsocketContext)
 }
@@ -42,71 +41,68 @@ export const WebsocketProvider = ({ children }) => {
       };
     
     const checkClientId = (id) => {
-    if (id !== clientId) {
-        updateClientId(id);
-    };
+        if (id !== clientId) {
+            updateClientId(id);
+        };
     };
     
     const checkGameId = (id) => {
-    if (id !== gameId) {
-        updateGameId(id);
-    };
+        if (id !== gameId) {
+            updateGameId(id);
+        };
     };
     
     const createGame = () => {
-    client.send(JSON.stringify({
-        method: 'create',
-        clientId: clientId,
-    }));
+        client.send(JSON.stringify({
+            method: 'create',
+            clientId: clientId,
+        }));
     };
     
     const joinServer = () => {
-    client.send(JSON.stringify({
-        method: 'join',
-        clientId: clientId,
-        gameId: gameId,
-        clientName: clientName
-    }));
+        client.send(JSON.stringify({
+            method: 'join',
+            clientId: clientId,
+            gameId: gameId,
+            clientName: clientName
+        }));
     };
     
     const sendCurrentPlay = (e) => {
-    client.send(JSON.stringify({
-        method: 'play',
-        clientId: clientId,
-        gameId: gameId,
-        move: {
-        moveSquareId: e.id
-        }
-    }));
+        client.send(JSON.stringify({
+            method: 'play',
+            clientId: clientId,
+            gameId: gameId,
+            move: {
+            moveSquareId: e.id
+            }
+        }));
     };
     
     const handlePlay = (e) => {
-    if (!e.isOccupied
-        && gameState.gameIsActive
-        && clientId === activePlayerId
-    ) {
-        sendCurrentPlay(e)
-    };
+        if (!e.isOccupied
+            && gameState.gameIsActive
+            && clientId === activePlayerId
+        ) {
+            sendCurrentPlay(e)
+        };
     };
     
     const resetGame = () => {
-    client.send(JSON.stringify({
-        method: 'reset',
-        gameId: gameId
-    }));
+        client.send(JSON.stringify({
+            method: 'reset',
+            gameId: gameId
+        }));
     };
     
     const value = {
         clientName,
         updateClientName,
         clientId,
-        // updateClientId,
         gameId,
         updateGameId,
         gameState,
-        // updateGameState,
         activePlayerId,
-        // updateActivePlayerId,
         createGame,
         joinServer,
         handlePlay,

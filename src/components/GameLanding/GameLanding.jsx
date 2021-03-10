@@ -1,6 +1,5 @@
 import styles from './GameLanding.module.scss';
 import React from 'react';
-
 import InputField from '../InputField';
 import PlayerWidget from '../PlayerWidget';
 import Board from '../Board';
@@ -18,14 +17,13 @@ const GameLanding = () => {
         activePlayerId,
         createGame,
         joinServer,
-        handlePlay,
         resetGame,
     } = useTictactoe()
 
   const generatePlayerWidgetJSX = (gameState) => {
     if (gameState.clients && gameState.clients.length > 0)  {
       return <div>
-        <PlayerWidget clientArray={gameState.clients}/>
+        <PlayerWidget />
       </div>
     }
   };
@@ -33,17 +31,16 @@ const GameLanding = () => {
   const generateBoardJSX = (gameState) => {
     //JPN - Show game only when active, or display final boardstate
     if((gameState && gameState.gameIsActive) || (gameState && gameState.gameResult)) {
-      const { boardState } = gameState;
       return (
         <div >
           <h3 className={styles.turnTracker}>
             {clientId === activePlayerId ? `Your move` : `Opponent's move`}
           </h3>
-          <Board gameState={boardState} squareHandleClick={handlePlay}/>
+          <Board />
        </div>
-      )
-    }
-  }
+      );
+    };
+  };
 
   const generateVictoryNotifier = (gameState) => {
     if (gameState && !gameState.gameIsActive && gameState.gameResult) {
