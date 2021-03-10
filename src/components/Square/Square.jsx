@@ -1,9 +1,11 @@
 import React from "react";
 import styles from "./Square.module.scss";
+import { useTictactoe } from '../../contexts/WebsocketProvider';
 
 const Square = (props) => {
 
-  const {square, handleClick } = props
+  const { handlePlay } = useTictactoe();
+  const { square } = props
   const { isOccupied, color, id } = square;
 
   const inlineStyle = {
@@ -13,7 +15,7 @@ const Square = (props) => {
     <div 
      className={styles.square}
      style={inlineStyle}
-     onClick={() => handleClick({
+     onClick={() => handlePlay({
         isOccupied: isOccupied,
         id: id,
         color: color,

@@ -1,17 +1,17 @@
 import React from "react";
 import styles from "./PlayerWidget.module.scss";
+import { useTictactoe } from '../../contexts/WebsocketProvider';
 
-const PlayerWidget = (props) => {
+const PlayerWidget = () => {
 
-  const { clientArray } = props;
-
-  
+  const { gameState } = useTictactoe()
+  const { clients} = gameState;
 
   return (
     <div className={styles.playerWidget}>
         <p className={styles.title}>Current players:</p>
         <div>
-            {clientArray.map(client => {
+            {clients.map(client => {
                 const inlineStyle = {
                     'color': client.color
                 }
