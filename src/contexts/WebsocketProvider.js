@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 
+const REACT_APP_SERVER = 'ws://127.0.0.1:1984'
+
 const WebsocketContext = React.createContext()
 
-const client = new WebSocket('ws://127.0.0.1:1984');
+const client = new WebSocket(REACT_APP_SERVER);
 
 export const useTictactoe = () => {
     return useContext(WebsocketContext)
