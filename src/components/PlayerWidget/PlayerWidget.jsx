@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./PlayerWidget.module.scss";
 import { useTictactoe } from '../../contexts/WebsocketProvider';
+import { Card } from 'react-bootstrap';
 
 const PlayerWidget = () => {
 
@@ -8,17 +8,21 @@ const PlayerWidget = () => {
   const { clients} = gameState;
 
   return (
-    <div className={styles.playerWidget}>
-        <p className={styles.title}>Current players:</p>
-        <div>
+      <Card className='mb-3'>
+        <Card.Body>
+          <Card.Title>
+              Current players
+          </Card.Title>
+          <Card.Text>
             {clients.map(client => {
                 const inlineStyle = {
                     'color': client.color
                 }
-                return <p key={client.color} style={inlineStyle}>{client.clientName}: {client.color}</p>
+                return (<p key={client.color} style={inlineStyle}>{client.clientName}: {client.color}</p>)
             })}
-        </div>
-    </div>
+          </Card.Text>
+        </Card.Body>
+      </Card>
   );
 };
 
