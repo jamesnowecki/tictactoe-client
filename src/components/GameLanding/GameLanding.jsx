@@ -122,7 +122,6 @@ const GameLanding = () => {
                 </InputGroup>
                 <Form.Text className='text-muted'>How other players will identify you</Form.Text>
               </Form.Group>
-
               <Form.Group controlId='formGameId'>
                 <Form.Label>Game ID</Form.Label>
                 <InputGroup className='mb-3' >
@@ -151,7 +150,6 @@ const GameLanding = () => {
           </Container>
             {generatePlayerWidgetJSX(gameState)}
             {generateVictoryNotifier(gameState)}
-
           </Col>
           <Col>
             <Container>
