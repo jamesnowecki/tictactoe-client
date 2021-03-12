@@ -8,7 +8,7 @@ const PlayerWidget = () => {
   const { clients} = gameState;
 
   return (
-      <Card className='w-50 mb-3'>
+      <Card className='mb-3'>
         <Card.Body>
           <Card.Title>
               Current players

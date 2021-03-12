@@ -9,7 +9,9 @@ import {
   Form,
   Navbar,
   Container,
-  Card
+  Card,
+  Row,
+  Col
 } from 'react-bootstrap';
 
 const GameLanding = () => {
@@ -55,7 +57,7 @@ const GameLanding = () => {
       const resultJSX = gameResult.victoryAchieved ? (<h3>{gameResult.winningColor} wins!</h3>) : (<h3>Game resulted in a draw</h3>);
 
       return  (
-        <Card className='w-50 mb-3'>
+        <Card className='mb-3'>
           <Card.Body>
             <Card.Title>
                 Game complete!
@@ -92,64 +94,71 @@ const GameLanding = () => {
         </Navbar.Brand>
       </Navbar>
       <Container>
-        <Container>
-          <Form className='w-50'>
-            <Form.Group controlId='formName'>
-              <Form.Label>Name</Form.Label>
-              <InputGroup className='mb-3'>
-                <Form.Control
-                  value={clientName} 
-                  placeholder='Enter your player handle' 
-                  onChange={(e) => 
-                  updateClientName(e.target.value)}
-                ></Form.Control>
-                <InputGroup.Append>
-                  {!gameState.gameIsActive ? 
-                  (<Button 
-                    variant="dark"
-                    onClick={
-                      () => createGame()
-                    }
-                  >
-                    Create game
-                  </Button>)
-                  : null}
-                </InputGroup.Append>
-              </InputGroup>
-              <Form.Text className='text-muted'>How other players will identify you</Form.Text>
-            </Form.Group>
+        <Row xs={1} sm={1} md={2}>
+          <Col>
+          <Container>
+            <Form>
+              <Form.Group controlId='formName'>
+                <Form.Label>Name</Form.Label>
+                <InputGroup className='mb-3'>
+                  <Form.Control
+                    value={clientName} 
+                    placeholder='Enter your player handle' 
+                    onChange={(e) => 
+                    updateClientName(e.target.value)}
+                  ></Form.Control>
+                  <InputGroup.Append>
+                    {!gameState.gameIsActive ? 
+                    (<Button 
+                      variant="dark"
+                      onClick={
+                        () => createGame()
+                      }
+                    >
+                      Create game
+                    </Button>)
+                    : null}
+                  </InputGroup.Append>
+                </InputGroup>
+                <Form.Text className='text-muted'>How other players will identify you</Form.Text>
+              </Form.Group>
 
-            <Form.Group controlId='formGameId'>
-              <Form.Label>Game ID</Form.Label>
-              <InputGroup className='mb-3' >
-                <Form.Control 
-                  value={gameId}
-                  placeholder='ID of game to join'
-                  onChange={(e) => 
-                  updateGameId(e.target.value)}
-                ></Form.Control>
-                <InputGroup.Append>
-                  {!gameState.gameIsActive ? 
-                  (<Button 
-                    variant="dark"
-                    onClick={
-                      () => joinServer()
-                    }
-                  >
-                    Join game
-                  </Button>)
-                  : null}
-                </InputGroup.Append>
-              </InputGroup>
-              <Form.Text className='text-muted'>If you create a game, this will be given to you. You can also enter an ID shared by another player to join their game.</Form.Text>
-            </Form.Group>
-          </Form>
-        </Container>
-        <Container>
-          {generatePlayerWidgetJSX(gameState)}
-          {generateVictoryNotifier(gameState)}
-          {generateBoardJSX(gameState)}
-        </Container>
+              <Form.Group controlId='formGameId'>
+                <Form.Label>Game ID</Form.Label>
+                <InputGroup className='mb-3' >
+                  <Form.Control 
+                    value={gameId}
+                    placeholder='ID of game to join'
+                    onChange={(e) => 
+                    updateGameId(e.target.value)}
+                  ></Form.Control>
+                  <InputGroup.Append>
+                    {!gameState.gameIsActive ? 
+                    (<Button 
+                      variant="dark"
+                      onClick={
+                        () => joinServer()
+                      }
+                    >
+                      Join game
+                    </Button>)
+                    : null}
+                  </InputGroup.Append>
+                </InputGroup>
+                <Form.Text className='text-muted'>If you create a game, this will be given to you. You can also enter an ID shared by another player to join their game.</Form.Text>
+              </Form.Group>
+            </Form>
+          </Container>
+            {generatePlayerWidgetJSX(gameState)}
+            {generateVictoryNotifier(gameState)}
+
+          </Col>
+          <Col>
+            <Container>
+            {generateBoardJSX(gameState)}
+            </Container>
+          </Col>
+        </Row>
       </Container>
     </div>
   );
